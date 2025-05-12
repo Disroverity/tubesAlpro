@@ -69,4 +69,4 @@ func tambahAktivitas(A *[maxData]Aktivitas, banyakAktivitas *int) {
 	}
 }
 
-func lihatAktivitas()
+func lihatAktivitas(A *[maxData]Aktivitas)
