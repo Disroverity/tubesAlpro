@@ -68,3 +68,5 @@ func tambahAktivitas(A *[maxData]Aktivitas, banyakAktivitas *int) {
 		fmt.Println("Aktivitas berhasil ditambahkan!")
 	}
 }
+
+func lihatAktivitas()
