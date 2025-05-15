@@ -32,6 +32,8 @@ func main() {
 		switch pilihan {
 		case 1:
 			tambahAktivitas(&dataAktivitas, &banyakAktivitas)
+		case 2:
+			lihatAktivitas(&dataAktivitas, banyakAktivitas)
 		default:
 			fmt.Println("Pilihan tidak valid.")
 		}
@@ -69,4 +71,20 @@ func tambahAktivitas(A *[maxData]Aktivitas, banyakAktivitas *int) {
 	}
 }
 
-func lihatAktivitas(A *[maxData]Aktivitas)
+func lihatAktivitas(A *[maxData]Aktivitas, banyakAktivitas int) {
+	var i int
+	if banyakAktivitas == 0 {
+		fmt.Println("Belum ada aktivitas yang ditambahkan.")
+	} else {
+		fmt.Println("\n=== Daftar Semua Aktivitas ===")
+		for i = 0; i < banyakAktivitas; i++ {
+			fmt.Println("Aktivitas ke-", i+1)
+			fmt.Println("Nama        :", A[i].nama)
+			fmt.Println("Tanggal     :", A[i].tanggal)
+			fmt.Println("Durasi (jam):", A[i].durasi)
+			fmt.Println("Penghasilan :", A[i].penghasilan)
+			fmt.Printf("Efisiensi   : %.2f\n", A[i].efisiensi)
+			fmt.Println("-----------------------------")
+		}
+	}
+}
