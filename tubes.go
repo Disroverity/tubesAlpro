@@ -88,3 +88,7 @@ func lihatAktivitas(A *[maxData]Aktivitas, banyakAktivitas int) {
 		}
 	}
 }
+
+func keluar() {
+	fmt.Println("...............")
+}
