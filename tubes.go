@@ -1,4 +1,3 @@
-// ship.go
 package main
 
 import "fmt"
@@ -31,7 +30,9 @@ func main() {
 		fmt.Println("2. Hitung potensi penghasilan")
 		fmt.Println("3. Simpan pekerjaan favorit")
  		fmt.Println("4. Perbandingan Potensi Pekerjaan")
-        fmt.Println("5. Keluar")
+		fmt.Println("5. Mengurutkan Pekerjaan dari Nama")
+        fmt.Println("6. Mengurutkan Pekerjaan dari Upah")
+		fmt.Println("7. Keluar")
 		fmt.Print("Pilih menu: ")
 		fmt.Scan(&pilihan)
 
@@ -43,7 +44,11 @@ func main() {
 			menuFavorit()
 		} else if pilihan == 4 {
     	    menuPerbandingan()
-        } else if pilihan == 5 {
+		} else if pilihan == 5 {
+    	    mengurutkanNama()
+		} else if pilihan == 6 {
+    	    menuCariUpah()
+        } else if pilihan == 7 {
 	        fmt.Println("Terima kasih telah menggunakan SHIP!")
 	        break
 		} else {
@@ -53,7 +58,7 @@ func main() {
 }
 
 func initData() {
-		pekerjaan[0] = PekerjaanSampingan{"Online Web Developer", "Teknologi", "Per proyek", 500000, "Membangun website untuk klien", "HTML, CSS, JS", true, "https://freelancer.com"}
+	pekerjaan[0] = PekerjaanSampingan{"Online Web Developer", "Teknologi", "Per proyek", 500000, "Membangun website untuk klien", "HTML, CSS, JS", true, "https://freelancer.com"}
 	pekerjaan[1] = PekerjaanSampingan{"Desainer Grafis Freelance", "Desain", "Per proyek", 300000, "Desain logo dan media sosial", "CorelDraw, Photoshop", true, "https://fiverr.com"}
 	pekerjaan[2] = PekerjaanSampingan{"Penulis Artikel", "Konten", "Per artikel", 100000, "Menulis artikel SEO", "Menulis, Riset", true, "https://sribulancer.com"}
 	pekerjaan[3] = PekerjaanSampingan{"Guru Les Privat", "Pendidikan", "Per jam", 75000, "Mengajar siswa secara langsung", "Mengajar, Kesabaran", false, "Jl. Melati No. 12, Bandung"}
@@ -123,8 +128,6 @@ func menuCariPekerjaan() {
 		bidang = "Pendidikan"
 	} else if pilih == 5 {
 		bidang = "Pemasaran"
-	} else if pilih == 6 {
-		bidang = "Administrasi"
 	} else if pilih == 6 {
 		bidang = "Administrasi"
 	} else if pilih == 7 {
@@ -318,3 +321,45 @@ func menuPerbandingan() {
 		fmt.Println("Keduanya menghasilkan jumlah yang sama.")
 	}
 }
+
+func mengurutkanNama() {
+    for i := 0; i < maxData-1; i++ {
+        minIdx := i
+        for j := i + 1; j < maxData; j++ {
+            if pekerjaan[j].Nama < pekerjaan[minIdx].Nama {
+                minIdx = j
+            }
+        }
+        if minIdx != i {
+            pekerjaan[i], pekerjaan[minIdx] = pekerjaan[minIdx], pekerjaan[i]
+        }
+    }
+
+    fmt.Println("\n=== Pekerjaan setelah diurutkan berdasarkan Nama ===")
+    for i := 0; i < maxData; i++ {
+        fmt.Printf("%d. %s (%s - Rp%d)\n", i+1, pekerjaan[i].Nama, pekerjaan[i].Bidang, pekerjaan[i].BesarUpah)
+    }
+}
+
+func menuCariUpah() {
+	// Sorting berdasarkan besar upah ascending dengan selection sort
+	for i := 0; i < maxData-1; i++ {
+		minIdx := i
+		for j := i + 1; j < maxData; j++ {
+			if pekerjaan[j].BesarUpah < pekerjaan[minIdx].BesarUpah {
+				minIdx = j
+			}
+		}
+		if minIdx != i {
+			pekerjaan[i], pekerjaan[minIdx] = pekerjaan[minIdx], pekerjaan[i]
+		}
+	}
+
+	fmt.Println("\nPekerjaan berhasil diurutkan berdasarkan upah (terendah ke tertinggi):")
+	for i := 0; i < maxData; i++ {
+		fmt.Printf("%d. %s (%s - Rp%d)\n", i+1, pekerjaan[i].Nama, pekerjaan[i].Bidang, pekerjaan[i].BesarUpah)
+	}
+}
+
+
+
