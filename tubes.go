@@ -1,6 +1,11 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+	"os/exec"
+	"runtime"
+)
 
 type PekerjaanSampingan struct {
 	Nama         string
@@ -20,11 +25,26 @@ var pekerjaan [maxData]PekerjaanSampingan
 var favorit [maxFavorit]PekerjaanSampingan
 var totalFavorit int = 0
 
+func clearScreen() {
+	var cmd *exec.Cmd
+	if runtime.GOOS == "windows" {
+		cmd = exec.Command("cmd", "/c", "cls")
+	} else if runtime.GOOS == "linux" || runtime.GOOS == "darwin" {
+		cmd = exec.Command("clear")
+	} else {
+		fmt.Println("Platform tidak didukung.")
+		return
+	}
+	cmd.Stdout = os.Stdout
+	cmd.Run()
+}
+
 func main() {
 	initData()
 
 	var pilihan int
 	for {
+		clearScreen()
 		fmt.Println("\n=== SHIP (Side Hustle Income Planner) ===")
 		fmt.Println("1. Cari pekerjaan sampingan")
 		fmt.Println("2. Hitung potensi penghasilan")
@@ -54,6 +74,10 @@ func main() {
 		} else {
 			fmt.Println("Pilihan tidak valid.")
 		}
+
+		fmt.Println("\nTekan Enter untuk kembali ke menu utama...")
+		fmt.Scanln()
+		fmt.Scanln()
 	}
 }
 
@@ -102,6 +126,7 @@ func initData() {
 
 func menuCariPekerjaan() {
 	var bidang string
+	clearScreen()
 	fmt.Println("\nPilih bidang:")
 	fmt.Println("1. Teknologi")
 	fmt.Println("2. Desain")
@@ -142,6 +167,7 @@ func menuCariPekerjaan() {
 		return
 	}
 
+	clearScreen()
 	fmt.Println("\nDaftar Pekerjaan di bidang", bidang, ":")
 	var i int
 	var ditemukan bool = false
@@ -164,6 +190,7 @@ func menuCariPekerjaan() {
 }
 
 func menuHitungPenghasilan() {
+	clearScreen()
 	var i, count, total int
 	fmt.Println("\n=== Hitung Potensi Penghasilan ===")
 	fmt.Println("Pilih bidang:")
@@ -208,6 +235,7 @@ func menuHitungPenghasilan() {
 		return
 	}
 
+	clearScreen()
 	count = 0
 	for i = 0; i < maxData; i++ {
 		if pekerjaan[i].Bidang == bidang {
@@ -230,6 +258,7 @@ func menuHitungPenghasilan() {
 		return
 	}
 
+	clearScreen()
 	var jumlah int
 	fmt.Print("Berapa kali dikerjakan per bulan? ")
 	fmt.Scan(&jumlah)
@@ -244,6 +273,7 @@ func menuHitungPenghasilan() {
 }
 
 func menuFavorit() {
+	clearScreen()
 	var i int
 	fmt.Println("\n=== Simpan Pekerjaan Favorit ===")
 	for i = 0; i < maxData; i++ {
@@ -280,6 +310,7 @@ func menuFavorit() {
 }
 
 func menuPerbandingan() {
+	clearScreen()
 	var i, total1, total2 int
 	fmt.Println("\n=== Perbandingan Potensi Pekerjaan ===")
 
@@ -301,6 +332,7 @@ func menuPerbandingan() {
 	}
 
 	// Input jumlah per bulan untuk masing-masing
+	clearScreen()
 	var jml1, jml2 int
 	fmt.Printf("Berapa kali '%s' dikerjakan per bulan? ", pekerjaan[idx1-1].Nama)
 	fmt.Scan(&jml1)
@@ -325,6 +357,7 @@ func menuPerbandingan() {
 }
 
 func mengurutkanNama() {
+	clearScreen()
 	var i, j, minIdx int
 	for i = 0; i < maxData-1; i++ {
 		minIdx = i
@@ -345,6 +378,7 @@ func mengurutkanNama() {
 }
 
 func menuCariUpah() {
+	clearScreen()
 	var i, j, minIdx int
 	// Sorting berdasarkan besar upah ascending dengan selection sort
 	for i = 0; i < maxData-1; i++ {
