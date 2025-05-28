@@ -29,11 +29,8 @@ func clearScreen() {
 	var cmd *exec.Cmd
 	if runtime.GOOS == "windows" {
 		cmd = exec.Command("cmd", "/c", "cls")
-	} else if runtime.GOOS == "linux" || runtime.GOOS == "darwin" {
-		cmd = exec.Command("clear")
 	} else {
-		fmt.Println("Platform tidak didukung.")
-		return
+		cmd = exec.Command("clear")
 	}
 	cmd.Stdout = os.Stdout
 	cmd.Run()
@@ -69,6 +66,7 @@ func main() {
 		} else if pilihan == 6 {
 			menuCariUpah()
 		} else if pilihan == 7 {
+			clearScreen()
 			fmt.Println("Terima kasih telah menggunakan SHIP!")
 			break
 		} else {
