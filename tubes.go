@@ -37,7 +37,8 @@ func main() {
 	initData()
 
 	var pilihan int
-	for {
+	var running bool = true
+	for running {
 		clearScreen()
 		fmt.Println("\n=== SHIP (Side Hustle Income Planner) ===")
 		fmt.Println("1. Cari pekerjaan sampingan")
@@ -62,7 +63,7 @@ func main() {
 		} else if pilihan == 6 {
 			clearScreen()
 			fmt.Println("Terima kasih telah menggunakan SHIP!")
-			break
+			running = false
 		} else {
 			fmt.Println("Pilihan tidak valid.")
 		}
@@ -335,7 +336,8 @@ func mengurutkanNama() {
 func menuCariUpah() {
 	clearScreen()
 	var i, j, minIdx int
-	// Sorting berdasarkan besar upah ascending dengan selection sort
+
+	// Sorting berdasarkan besar upah ascending (Selection Sort)
 	for i = 0; i < maxData-1; i++ {
 		minIdx = i
 		for j = i + 1; j < maxData; j++ {
@@ -351,5 +353,32 @@ func menuCariUpah() {
 	fmt.Println("\nPekerjaan berhasil diurutkan berdasarkan upah (terendah ke tertinggi):")
 	for i = 0; i < maxData; i++ {
 		fmt.Printf("%d. %s (%s - Rp%d)\n", i+1, pekerjaan[i].Nama, pekerjaan[i].Bidang, pekerjaan[i].BesarUpah)
+	}
+
+	var target, low, high, foundIdx, mid int
+	fmt.Print("\nMasukkan upah yang ingin dicari: Rp")
+	fmt.Scan(&target)
+
+	low = 0
+	high = maxData - 1
+	foundIdx = -1 
+
+	for low <= high {
+		mid = (low + high) / 2
+		if pekerjaan[mid].BesarUpah == target {
+			foundIdx = mid
+			high = low - 1 
+		} else if pekerjaan[mid].BesarUpah < target {
+			low = mid + 1
+		} else {
+			high = mid - 1
+		}
+	}
+
+	if foundIdx != -1 {
+		fmt.Printf("Pekerjaan ditemukan: %s (%s - Rp%d)\n",
+			pekerjaan[foundIdx].Nama, pekerjaan[foundIdx].Bidang, pekerjaan[foundIdx].BesarUpah)
+	} else {
+		fmt.Println("Pekerjaan dengan upah tersebut tidak ditemukan.")
 	}
 }
