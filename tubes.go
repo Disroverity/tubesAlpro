@@ -18,9 +18,9 @@ type PekerjaanSampingan struct {
 	Alamat       string
 }
 
-const maxData = 40
-
-var pekerjaan [maxData]PekerjaanSampingan
+const NMAX = 40
+var pekerjaan [NMAX]PekerjaanSampingan
+var jumlahData int
 
 func clearScreen() {
 	var cmd *exec.Cmd
@@ -55,11 +55,11 @@ func main() {
 		} else if pilihan == 2 {
 			menuHitungPenghasilan()
 		} else if pilihan == 3 {
-			menuPerbandingan()
+			menuPerbandingan(pekerjaan, jumlahData)
 		} else if pilihan == 4 {
 			mengurutkanNama()
 		} else if pilihan == 5 {
-			menuCariUpah()
+			menuCariUpah(&pekerjaan, &jumlahData)
 		} else if pilihan == 6 {
 			clearScreen()
 			fmt.Println("Terima kasih telah menggunakan SHIP!")
@@ -75,6 +75,7 @@ func main() {
 }
 
 func initData() {
+	jumlahData = NMAX
 	pekerjaan[0] = PekerjaanSampingan{"Online Web Developer", "Teknologi", "Per proyek", 500000, "Membangun website untuk klien", "HTML, CSS, JS", true, "https://freelancer.com"}
 	pekerjaan[1] = PekerjaanSampingan{"Desainer Grafis Freelance", "Desain", "Per proyek", 300000, "Desain logo dan media sosial", "CorelDraw, Photoshop", true, "https://fiverr.com"}
 	pekerjaan[2] = PekerjaanSampingan{"Penulis Artikel", "Konten", "Per artikel", 100000, "Menulis artikel SEO", "Menulis, Riset", true, "https://sribulancer.com"}
@@ -164,7 +165,7 @@ func menuCariPekerjaan() {
 	fmt.Println("\nDaftar Pekerjaan di bidang", bidang, ":")
 	var i int
 	var ditemukan bool = false
-	for i = 0; i < maxData; i++ {
+	for i = 0; i < NMAX; i++ {
 		if pekerjaan[i].Bidang == bidang {
 			fmt.Printf("\n%d. %s\n", i+1, pekerjaan[i].Nama)
 			fmt.Printf("   Tipe Upah     : %s\n", pekerjaan[i].TipeUpah)
@@ -230,7 +231,7 @@ func menuHitungPenghasilan() {
 
 	clearScreen()
 	count = 0
-	for i = 0; i < maxData; i++ {
+	for i = 0; i < NMAX; i++ {
 		if pekerjaan[i].Bidang == bidang {
 			count++
 			fmt.Printf("%d. %s (%s - Rp%d)\n", i+1, pekerjaan[i].Nama, pekerjaan[i].TipeUpah, pekerjaan[i].BesarUpah)
@@ -246,7 +247,7 @@ func menuHitungPenghasilan() {
 	var idx int
 	fmt.Scan(&idx)
 
-	if idx < 1 || idx > maxData || pekerjaan[idx-1].Bidang != bidang {
+	if idx < 1 || idx > NMAX || pekerjaan[idx-1].Bidang != bidang {
 		fmt.Println("Input tidak valid.")
 		return
 	}
@@ -265,40 +266,40 @@ func menuHitungPenghasilan() {
 	fmt.Printf("Estimasi penghasilan bulanan: Rp%d\n", total)
 }
 
-func menuPerbandingan() {
+func menuPerbandingan(data [NMAX]PekerjaanSampingan, jumlahData int) {
+	var i int
+	var idx1, idx2, jml1, jml2 int
 	clearScreen()
-	var i, total1, total2 int
 	fmt.Println("\n=== Perbandingan Potensi Pekerjaan ===")
 
-	// Tampilkan semua pekerjaan
-	for i = 0; i < maxData; i++ {
+	for i = 0; i < jumlahData; i++ {
 		fmt.Printf("%d. %s (%s - Rp%d)\n", i+1, pekerjaan[i].Nama, pekerjaan[i].Bidang, pekerjaan[i].BesarUpah)
 	}
 
-	// Pilih dua pekerjaan
-	var idx1, idx2 int
 	fmt.Print("\nPilih pekerjaan pertama (nomor): ")
 	fmt.Scan(&idx1)
 	fmt.Print("Pilih pekerjaan kedua (nomor): ")
 	fmt.Scan(&idx2)
 
-	if idx1 < 1 || idx1 > maxData || idx2 < 1 || idx2 > maxData || idx1 == idx2 {
+	if idx1 < 1 || idx1 > jumlahData || idx2 < 1 || idx2 > jumlahData || idx1 == idx2 {
 		fmt.Println("Pilihan tidak valid atau sama.")
 		return
 	}
 
-	// Input jumlah per bulan untuk masing-masing
 	clearScreen()
-	var jml1, jml2 int
 	fmt.Printf("Berapa kali '%s' dikerjakan per bulan? ", pekerjaan[idx1-1].Nama)
 	fmt.Scan(&jml1)
 	fmt.Printf("Berapa kali '%s' dikerjakan per bulan? ", pekerjaan[idx2-1].Nama)
 	fmt.Scan(&jml2)
 
+	bandingkanPekerjaan(pekerjaan, jumlahData, idx1, idx2, jml1, jml2)
+}
+
+func bandingkanPekerjaan(pekerjaan [NMAX]PekerjaanSampingan, jumlahData, idx1, idx2, jml1, jml2 int) {
+	var total1, total2 int
 	total1 = pekerjaan[idx1-1].BesarUpah * jml1
 	total2 = pekerjaan[idx2-1].BesarUpah * jml2
 
-	// Hasil perbandingan
 	fmt.Println("\n=== Hasil Perbandingan ===")
 	fmt.Printf("%s: Rp%d/bulan\n", pekerjaan[idx1-1].Nama, total1)
 	fmt.Printf("%s: Rp%d/bulan\n", pekerjaan[idx2-1].Nama, total2)
@@ -312,12 +313,13 @@ func menuPerbandingan() {
 	}
 }
 
+
 func mengurutkanNama() {
 	clearScreen()
 	var i, j, minIdx int
-	for i = 0; i < maxData-1; i++ {
+	for i = 0; i < NMAX-1; i++ {
 		minIdx = i
-		for j = i + 1; j < maxData; j++ {
+		for j = i + 1; j < NMAX; j++ {
 			if pekerjaan[j].Nama < pekerjaan[minIdx].Nama {
 				minIdx = j
 			}
@@ -328,57 +330,43 @@ func mengurutkanNama() {
 	}
 
 	fmt.Println("\n=== Pekerjaan setelah diurutkan berdasarkan Nama ===")
-	for i = 0; i < maxData; i++ {
+	for i = 0; i < NMAX; i++ {
 		fmt.Printf("%d. %s (%s - Rp%d)\n", i+1, pekerjaan[i].Nama, pekerjaan[i].Bidang, pekerjaan[i].BesarUpah)
 	}
 }
 
-func menuCariUpah() {
+func menuCariUpah(pekerjaan *[NMAX]PekerjaanSampingan, jumlahData *int) {
+	var minUpah, maxUpah, i int
+	var ditemukan bool = false
 	clearScreen()
-	var i, j, minIdx int
+	fmt.Println("\n=== Cari Pekerjaan Berdasarkan Upah (Linear Search) ===")
+	fmt.Print("Masukkan minimal upah (Rp): ")
+	fmt.Scan(&minUpah)
+	fmt.Print("Masukkan maksimal upah (Rp): ")
+	fmt.Scan(&maxUpah)
 
-	// Sorting berdasarkan besar upah ascending (Selection Sort)
-	for i = 0; i < maxData-1; i++ {
-		minIdx = i
-		for j = i + 1; j < maxData; j++ {
-			if pekerjaan[j].BesarUpah < pekerjaan[minIdx].BesarUpah {
-				minIdx = j
-			}
-		}
-		if minIdx != i {
-			pekerjaan[i], pekerjaan[minIdx] = pekerjaan[minIdx], pekerjaan[i]
-		}
+	if minUpah > maxUpah {
+		fmt.Println("Rentang upah tidak valid (min lebih besar dari max).")
+		return
 	}
+	
+	fmt.Println("\nPekerjaan dengan upah antara Rp", minUpah, "sampai Rp", maxUpah)
 
-	fmt.Println("\nPekerjaan berhasil diurutkan berdasarkan upah (terendah ke tertinggi):")
-	for i = 0; i < maxData; i++ {
-		fmt.Printf("%d. %s (%s - Rp%d)\n", i+1, pekerjaan[i].Nama, pekerjaan[i].Bidang, pekerjaan[i].BesarUpah)
-	}
-
-	var target, low, high, foundIdx, mid int
-	fmt.Print("\nMasukkan upah yang ingin dicari: Rp")
-	fmt.Scan(&target)
-
-	low = 0
-	high = maxData - 1
-	foundIdx = -1 
-
-	for low <= high {
-		mid = (low + high) / 2
-		if pekerjaan[mid].BesarUpah == target {
-			foundIdx = mid
-			high = low - 1 
-		} else if pekerjaan[mid].BesarUpah < target {
-			low = mid + 1
-		} else {
-			high = mid - 1
+	for i = 0; i < *jumlahData; i++ {
+		if pekerjaan[i].BesarUpah >= minUpah && pekerjaan[i].BesarUpah <= maxUpah {
+			fmt.Printf("\n%d. %s\n", i+1, pekerjaan[i].Nama)
+			fmt.Printf("   Bidang        : %s\n", pekerjaan[i].Bidang)
+			fmt.Printf("   Tipe Upah     : %s\n", pekerjaan[i].TipeUpah)
+			fmt.Printf("   Besar Upah    : Rp%d\n", pekerjaan[i].BesarUpah)
+			fmt.Printf("   Deskripsi     : %s\n", pekerjaan[i].Deskripsi)
+			fmt.Printf("   Keterampilan  : %s\n", pekerjaan[i].Keterampilan)
+			fmt.Printf("   Fleksibel     : %v\n", pekerjaan[i].Fleksibel)
+			fmt.Printf("   Alamat/Link   : %s\n", pekerjaan[i].Alamat)
+			ditemukan = true
 		}
 	}
 
-	if foundIdx != -1 {
-		fmt.Printf("Pekerjaan ditemukan: %s (%s - Rp%d)\n",
-			pekerjaan[foundIdx].Nama, pekerjaan[foundIdx].Bidang, pekerjaan[foundIdx].BesarUpah)
-	} else {
-		fmt.Println("Pekerjaan dengan upah tersebut tidak ditemukan.")
+	if !ditemukan {
+		fmt.Println("Tidak ditemukan pekerjaan dalam rentang upah tersebut.")
 	}
 }
