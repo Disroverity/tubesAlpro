@@ -19,11 +19,8 @@ type PekerjaanSampingan struct {
 }
 
 const maxData = 40
-const maxFavorit = 10
 
 var pekerjaan [maxData]PekerjaanSampingan
-var favorit [maxFavorit]PekerjaanSampingan
-var totalFavorit int = 0
 
 func clearScreen() {
 	var cmd *exec.Cmd
@@ -45,11 +42,10 @@ func main() {
 		fmt.Println("\n=== SHIP (Side Hustle Income Planner) ===")
 		fmt.Println("1. Cari pekerjaan sampingan")
 		fmt.Println("2. Hitung potensi penghasilan")
-		fmt.Println("3. Simpan pekerjaan favorit")
-		fmt.Println("4. Perbandingan Potensi Pekerjaan")
-		fmt.Println("5. Mengurutkan Pekerjaan dari Nama")
-		fmt.Println("6. Mengurutkan Pekerjaan dari Upah")
-		fmt.Println("7. Keluar")
+		fmt.Println("3. Perbandingan Potensi Pekerjaan")
+		fmt.Println("4. Mengurutkan Pekerjaan dari Nama")
+		fmt.Println("5. Mengurutkan Pekerjaan dari Upah")
+		fmt.Println("6. Keluar")
 		fmt.Print("Pilih menu: ")
 		fmt.Scan(&pilihan)
 
@@ -58,14 +54,12 @@ func main() {
 		} else if pilihan == 2 {
 			menuHitungPenghasilan()
 		} else if pilihan == 3 {
-			menuFavorit()
-		} else if pilihan == 4 {
 			menuPerbandingan()
-		} else if pilihan == 5 {
+		} else if pilihan == 4 {
 			mengurutkanNama()
-		} else if pilihan == 6 {
+		} else if pilihan == 5 {
 			menuCariUpah()
-		} else if pilihan == 7 {
+		} else if pilihan == 6 {
 			clearScreen()
 			fmt.Println("Terima kasih telah menggunakan SHIP!")
 			break
@@ -268,43 +262,6 @@ func menuHitungPenghasilan() {
 
 	total = pekerjaan[idx-1].BesarUpah * jumlah
 	fmt.Printf("Estimasi penghasilan bulanan: Rp%d\n", total)
-}
-
-func menuFavorit() {
-	clearScreen()
-	var i int
-	fmt.Println("\n=== Simpan Pekerjaan Favorit ===")
-	for i = 0; i < maxData; i++ {
-		fmt.Printf("%d. %s (%s - Rp%d)\n", i+1, pekerjaan[i].Nama, pekerjaan[i].TipeUpah, pekerjaan[i].BesarUpah)
-	}
-
-	fmt.Print("Pilih pekerjaan untuk disimpan (1-6, 0 untuk lihat favorit): ")
-	var idx int
-	fmt.Scan(&idx)
-
-	if idx == 0 {
-		fmt.Println("\nDaftar Favorit:")
-		if totalFavorit == 0 {
-			fmt.Println("Belum ada favorit.")
-			return
-		}
-		for i = 0; i < totalFavorit; i++ {
-			fmt.Printf("%d. %s (%s - Rp%d)\n", i+1, favorit[i].Nama, favorit[i].TipeUpah, favorit[i].BesarUpah)
-		}
-		return
-	} else if idx < 1 || idx > maxData {
-		fmt.Println("Input tidak valid.")
-		return
-	}
-
-	if totalFavorit >= maxFavorit {
-		fmt.Println("Favorit sudah penuh.")
-		return
-	}
-
-	favorit[totalFavorit] = pekerjaan[idx-1]
-	totalFavorit++
-	fmt.Println("Pekerjaan ditambahkan ke favorit.")
 }
 
 func menuPerbandingan() {
